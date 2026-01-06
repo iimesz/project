@@ -1,9 +1,10 @@
 package com.khaled.demo.service;
 
-import com.khaled.demo.model.dto.UserRegistrationRequestDto;
-import com.khaled.demo.model.dto.UserRegistrationResponseDto;
+import com.khaled.demo.model.dto.UserContactDto;
+import com.khaled.demo.model.dto.UserDto;
+import com.khaled.demo.model.dto.UserResponseDto;
 
 public interface UserService {
 
-    UserRegistrationResponseDto register(UserRegistrationRequestDto dto);
+    UserResponseDto register(UserDto dto , UserContactDto udto);
 }

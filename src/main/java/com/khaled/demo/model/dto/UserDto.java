@@ -4,14 +4,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
+
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.time.LocalDate;
 
 @Data
-public class UserRegistrationRequestDto {
+public class UserDto {
 
     @Email(message = "Invalid email format")
     @NotBlank(message = "Email is required")
@@ -33,17 +33,4 @@ public class UserRegistrationRequestDto {
     @Size(min = 8, max = 64, message = "Password must be at least 8 characters")
     private String password;
 
-    @NotBlank(message = "Country is required")
-    private String country;
-
-    @NotBlank(message = "City is required")
-    private String city;
-
-    // 🇧🇭 Bahrain phone validation
-    @NotBlank(message = "Phone number is required")
-    @Pattern(
-            regexp = "^(3|6)\\d{7}$",
-            message = "Invalid Bahrain phone number"
-    )
-    private String phoneNumber;
 }

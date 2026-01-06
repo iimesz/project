@@ -1,7 +1,8 @@
 package com.khaled.demo.service.impl;
 
-import com.khaled.demo.model.dto.UserRegistrationRequestDto;
-import com.khaled.demo.model.dto.UserRegistrationResponseDto;
+import com.khaled.demo.model.dto.UserContactDto;
+import com.khaled.demo.model.dto.UserDto;
+import com.khaled.demo.model.dto.UserResponseDto;
 import com.khaled.demo.model.entity.User;
 import com.khaled.demo.model.entity.UserContact;
 import com.khaled.demo.repository.UserRepository;
@@ -19,7 +20,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserRegistrationResponseDto register(UserRegistrationRequestDto dto) {
+    public UserResponseDto register(UserDto dto , UserContactDto udto ) {
 
         if (userRepository.existsByEmail(dto.getEmail())) {
             return null; // handled in controller
@@ -33,9 +34,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
         UserContact contact = new UserContact();
-        contact.setCountry(dto.getCountry());
-        contact.setCity(dto.getCity());
-        contact.setPhoneNumber(dto.getPhoneNumber());
+        contact.setCountry(udto.getCountry());
+        contact.setCity(udto.getCity());
+        contact.setPhoneNumber(udto.getPhoneNumber());
         contact.setUser(user);
 
         user.setUserContact(contact);
@@ -45,8 +46,8 @@ public class UserServiceImpl implements UserService {
         return mapToResponse(savedUser);
     }
 
-    private UserRegistrationResponseDto mapToResponse(User user) {
-        UserRegistrationResponseDto dto = new UserRegistrationResponseDto();
+    private UserResponseDto mapToResponse(User user) {
+        UserResponseDto dto = new UserResponseDto();
         dto.setId(user.getId());
         dto.setEmail(user.getEmail());
         dto.setFirstName(user.getFirstName());

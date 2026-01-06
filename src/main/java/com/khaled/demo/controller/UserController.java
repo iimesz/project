@@ -1,7 +1,8 @@
 package com.khaled.demo.controller;
 
-import com.khaled.demo.model.dto.UserRegistrationRequestDto;
-import com.khaled.demo.model.dto.UserRegistrationResponseDto;
+import com.khaled.demo.model.dto.UserContactDto;
+import com.khaled.demo.model.dto.UserDto;
+import com.khaled.demo.model.dto.UserResponseDto;
 import com.khaled.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,10 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @Valid @RequestBody UserRegistrationRequestDto dto) {
+            @Valid @RequestBody UserDto dto,
+            @Valid @RequestBody UserContactDto contactDto) {
 
-        UserRegistrationResponseDto response = userService.register(dto);
+        UserResponseDto response = userService.register(dto, contactDto);
 
         if (response == null) {
             return ResponseEntity
