@@ -1,7 +1,6 @@
 package com.khaled.demo.controller;
 
-import com.khaled.demo.model.dto.UserContactDto;
-import com.khaled.demo.model.dto.UserDto;
+import com.khaled.demo.model.dto.RegisterRequestDto;
 import com.khaled.demo.model.dto.UserResponseDto;
 import com.khaled.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -21,10 +20,9 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @Valid @RequestBody UserDto dto,
-            @Valid @RequestBody UserContactDto contactDto) {
+            @Valid @RequestBody RegisterRequestDto request) {
 
-        UserResponseDto response = userService.register(dto, contactDto);
+        UserResponseDto response = userService.register(request.getUser(), request.getContact());
 
         if (response == null) {
             return ResponseEntity
