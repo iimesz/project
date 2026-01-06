@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Demo - User Registration</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>User Registration</h1>
+    <form id="regForm">
+      <label>Email <input type="email" name="email" required /></label>
+      <label>First name <input type="text" name="firstName" required /></label>
+      <label>Last name <input type="text" name="lastName" required /></label>
+      <label>Birth date <input type="date" name="birthDate" required /></label>
+      <label>Password <input type="password" name="password" required minlength="8" /></label>
+      <label>Country <input type="text" name="country" required /></label>
+      <label>City <input type="text" name="city" required /></label>
+      <label>Phone number <input type="tel" name="phoneNumber" /></label>
+
+      <div class="actions">
+        <button type="submit">Register</button>
+      </div>
+    </form>
+
+    <div id="message" role="status" aria-live="polite"></div>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
