@@ -58,12 +58,18 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Flyway database migrations -->
+        <!-- Flyway database migrations (Boot 4 needs the starter) -->
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-flyway</artifactId>
         </dependency>
 
+        <!-- Flyway PostgreSQL support -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
         <!-- Spring Boot DevTools for hot reload -->
         <dependency>
