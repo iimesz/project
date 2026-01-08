@@ -1,8 +1,8 @@
 package com.khaled.demo.mapper;
 
-import com.khaled.demo.model.dto.UserContactDto;
-import com.khaled.demo.model.dto.UserDto;
-import com.khaled.demo.model.dto.UserResponseDto;
+import com.khaled.demo.model.dto.request.UserContactDto;
+import com.khaled.demo.model.dto.request.UserDto;
+import com.khaled.demo.model.dto.respone.UserResponseDto;
 import com.khaled.demo.model.entity.User;
 import com.khaled.demo.model.entity.UserContact;
 import org.mapstruct.Mapper;

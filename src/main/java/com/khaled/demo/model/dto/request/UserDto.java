@@ -1,4 +1,4 @@
-package com.khaled.demo.model.dto;
+package com.khaled.demo.model.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

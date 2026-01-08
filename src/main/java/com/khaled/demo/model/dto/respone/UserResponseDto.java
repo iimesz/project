@@ -1,4 +1,4 @@
-package com.khaled.demo.model.dto;
+package com.khaled.demo.model.dto.respone;
 
 import lombok.Data;
 
