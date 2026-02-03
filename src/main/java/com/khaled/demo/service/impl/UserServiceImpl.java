@@ -3,7 +3,6 @@ package com.khaled.demo.service.impl;
 import com.khaled.demo.mapper.UserMapper;
 import com.khaled.demo.model.dto.request.LoginRequestDto;
 import com.khaled.demo.model.dto.respone.LoginResponseDto;
-import com.khaled.demo.model.dto.request.UserContactDto;
 import com.khaled.demo.model.dto.request.UserDto;
 import com.khaled.demo.model.dto.respone.UserResponseDto;
 import com.khaled.demo.model.entity.User;
@@ -27,12 +26,12 @@ public class UserServiceImpl implements UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    public UserResponseDto register(UserDto dto, UserContactDto udto) {
+    public UserResponseDto register(UserDto dto) {
         // Normalize email: trim and lowercase
         String normalizedEmail = dto.getEmail().trim().toLowerCase();
 
         if (userRepository.existsByEmail(normalizedEmail)) {
-            return null; // handled in controller
+            return null ;    // handled in controller
         }
 
         // DTO → Entity
@@ -41,11 +40,6 @@ public class UserServiceImpl implements UserService {
 
         // Security responsibility
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-
-        UserContact userContact = userMapper.toEntity(udto);
-        userContact.setUser(user);
-        user.setUserContact(userContact);
-
         User savedUser = userRepository.save(user);
 
         // Entity → Response DTO

@@ -1,8 +1,8 @@
 package com.khaled.demo.controller;
 
 import com.khaled.demo.model.dto.request.LoginRequestDto;
+import com.khaled.demo.model.dto.request.UserDto;
 import com.khaled.demo.model.dto.respone.LoginResponseDto;
-import com.khaled.demo.model.dto.request.RegisterRequestDto;
 import com.khaled.demo.model.dto.respone.UserResponseDto;
 import com.khaled.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -23,15 +26,17 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(
-            @Valid @RequestBody RegisterRequestDto request) {
+            @Valid @RequestBody UserDto request) {
 
-        UserResponseDto response = userService.register(request.getUser(), request.getContact());
+        UserResponseDto response = userService.register(request);
 
-        if (response == null) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Email already exists");
-        }
+
+//        // all the logic in the service
+//        if (response == null) {
+//            return ResponseEntity
+//                    .status(HttpStatus.CONFLICT)
+//                    .body("Email already exists");
+//        }
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -40,13 +45,15 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequest) {
-        try {
+
+        // same the above
             LoginResponseDto response = userService.login(loginRequest);
             return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity
-                    .status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid email or password");
-        }
     }
+
+
+    // Add endpoint for show the info for user {id} and put and delete
+    // it must be authorized
+
+    // Adding the Exception handler
 }

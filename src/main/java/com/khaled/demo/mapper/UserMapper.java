@@ -1,6 +1,5 @@
 package com.khaled.demo.mapper;
 
-import com.khaled.demo.model.dto.request.UserContactDto;
 import com.khaled.demo.model.dto.request.UserDto;
 import com.khaled.demo.model.dto.respone.UserResponseDto;
 import com.khaled.demo.model.entity.User;
@@ -16,9 +15,6 @@ public interface UserMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "userContact", ignore = true)
     User toEntity(UserDto dto);
-
-    @Mapping(target = "user", ignore = true)
-    UserContact toEntity(UserContactDto dto);
 
     UserResponseDto toResponse(User user);
 }
