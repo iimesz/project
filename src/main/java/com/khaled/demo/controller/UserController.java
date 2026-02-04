@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
-import java.util.TreeSet;
-
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -29,15 +26,6 @@ public class UserController {
             @Valid @RequestBody UserDto request) {
 
         UserResponseDto response = userService.register(request);
-
-
-//        // all the logic in the service
-//        if (response == null) {
-//            return ResponseEntity
-//                    .status(HttpStatus.CONFLICT)
-//                    .body("Email already exists");
-//        }
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -50,6 +38,7 @@ public class UserController {
             LoginResponseDto response = userService.login(loginRequest);
             return ResponseEntity.ok(response);
     }
+
 
 
     // Add endpoint for show the info for user {id} and put and delete

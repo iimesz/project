@@ -27,13 +27,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto register(UserDto dto) {
-        // Normalize email: trim and lowercase
+
         String normalizedEmail = dto.getEmail().trim().toLowerCase();
 
         if (userRepository.existsByEmail(normalizedEmail)) {
-            return null ;    // handled in controller
+            throw new IllegalArgumentException("Email already exists");
         }
-
         // DTO → Entity
         User user = userMapper.toEntity(dto);
         user.setEmail(normalizedEmail);
