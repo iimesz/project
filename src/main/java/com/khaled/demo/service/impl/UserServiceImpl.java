@@ -74,5 +74,54 @@ public class UserServiceImpl implements UserService {
                 user.getLastName()
         );
     }
+
+    @Override
+    public UserResponseDto getUserById(Long id, String authenticatedEmail) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (!user.getEmail().equals(authenticatedEmail)) {
+            throw new IllegalArgumentException("Unauthorized: You can only access your own data");
+        }
+
+        return userMapper.toResponse(user);
+    }
+
+
+    @Override
+    public UserResponseDto updateUser(Long id, UserDto dto, String authenticatedEmail) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (!user.getEmail().equals(authenticatedEmail)) {
+            throw new IllegalArgumentException("Unauthorized: You can only modify your own data");
+        }
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
+        user.setEmail(dto.getEmail().trim().toLowerCase());
+
+        if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+
+        User updatedUser = userRepository.save(user);
+        return userMapper.toResponse(updatedUser);
+    }
+
+
+    @Override
+    public void deleteUser(Long id, String authenticatedEmail) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        if (!user.getEmail().equals(authenticatedEmail)) {
+            throw new IllegalArgumentException("Unauthorized: You can only delete your own account");
+        }
+
+        userRepository.deleteById(id);
+    }
+
+
+
 }
 

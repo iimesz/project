@@ -9,10 +9,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -44,5 +43,37 @@ public class UserController {
     // Add endpoint for show the info for user {id} and put and delete
     // it must be authorized
 
-    // Adding the Exception handler
+    // Get User by ID
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> getUserById(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        UserResponseDto response = userService.getUserById(id, authentication.getName());
+        return ResponseEntity.ok(response);
+    }
+
+    // Update User
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> updateUser(
+            @PathVariable Long id,
+            @Valid @RequestBody UserDto request,
+            Authentication authentication) {
+
+        UserResponseDto response = userService.updateUser(id, request, authentication.getName());
+        return ResponseEntity.ok(response);
+    }
+
+    // Delete User
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> deleteUser(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        userService.deleteUser(id, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
 }
