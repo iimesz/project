@@ -12,3 +12,4 @@ public class UserInfoDto {
     private String lastName;
     private LocalDate dateOfBirth;
 }
+

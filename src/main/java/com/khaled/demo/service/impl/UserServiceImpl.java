@@ -1,12 +1,15 @@
 package com.khaled.demo.service.impl;
 
+import com.khaled.demo.exception.customExceptions.DeleteUserException;
+import com.khaled.demo.exception.customExceptions.UpdateUserException;
+import com.khaled.demo.exception.customExceptions.UserNotFoundException;
 import com.khaled.demo.mapper.UserMapper;
 import com.khaled.demo.model.dto.request.LoginRequestDto;
 import com.khaled.demo.model.dto.respone.LoginResponseDto;
 import com.khaled.demo.model.dto.request.UserDto;
+import com.khaled.demo.model.dto.respone.UserInfoDto;
 import com.khaled.demo.model.dto.respone.UserResponseDto;
 import com.khaled.demo.model.entity.User;
-import com.khaled.demo.model.entity.UserContact;
 import com.khaled.demo.repository.UserRepository;
 import com.khaled.demo.security.JwtTokenProvider;
 import com.khaled.demo.service.UserService;
@@ -31,38 +34,34 @@ public class UserServiceImpl implements UserService {
         String normalizedEmail = dto.getEmail().trim().toLowerCase();
 
         if (userRepository.existsByEmail(normalizedEmail)) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new UpdateUserException("Email already exists");
         }
-        // DTO → Entity
+
         User user = userMapper.toEntity(dto);
         user.setEmail(normalizedEmail);
-
-        // Security responsibility
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        User savedUser = userRepository.save(user);
 
-        // Entity → Response DTO
+        User savedUser = userRepository.save(user);
         return userMapper.toResponse(savedUser);
     }
 
     @Override
     public LoginResponseDto login(LoginRequestDto loginRequest) {
-        // Normalize email: trim and lowercase
+
         String normalizedEmail = loginRequest.getEmail().trim().toLowerCase();
 
         User user = userRepository.findByEmail(normalizedEmail)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
+                .orElseThrow(() ->
+                        new UserNotFoundException("Invalid email or password")
+                );
 
-        // Verify password
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new UpdateUserException("Invalid email or password");
         }
 
-        // Generate tokens
         String accessToken = jwtTokenProvider.generateAccessToken(user.getEmail());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
 
-        // Update refresh token in database
         user.setRefreshToken(refreshToken);
         userRepository.save(user);
 
@@ -76,32 +75,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto getUserById(Long id, String authenticatedEmail) {
+    public UserInfoDto getUserById(Long id, String authenticatedEmail) {
+
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found with id: " + id)
+                );
 
         if (!user.getEmail().equals(authenticatedEmail)) {
-            throw new IllegalArgumentException("Unauthorized: You can only access your own data");
+            throw new UpdateUserException("Unauthorized: You can only access your own data");
         }
 
-        return userMapper.toResponse(user);
+        return userMapper.toInfoDto(user);
     }
+
 
 
     @Override
     public UserResponseDto updateUser(Long id, UserDto dto, String authenticatedEmail) {
+
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found with id: " + id)
+                );
 
         if (!user.getEmail().equals(authenticatedEmail)) {
-            throw new IllegalArgumentException("Unauthorized: You can only modify your own data");
+            throw new UpdateUserException("Unauthorized: You can only modify your own data");
         }
+
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail().trim().toLowerCase());
 
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+            user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
         User updatedUser = userRepository.save(user);
@@ -111,17 +118,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id, String authenticatedEmail) {
+
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found with id: " + id)
+                );
 
         if (!user.getEmail().equals(authenticatedEmail)) {
-            throw new IllegalArgumentException("Unauthorized: You can only delete your own account");
+            throw new DeleteUserException("Unauthorized: You can only delete your own account");
         }
 
-        userRepository.deleteById(id);
+        userRepository.delete(user);
     }
-
-
-
 }
-

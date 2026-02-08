@@ -3,6 +3,7 @@ package com.khaled.demo.controller;
 import com.khaled.demo.model.dto.request.LoginRequestDto;
 import com.khaled.demo.model.dto.request.UserDto;
 import com.khaled.demo.model.dto.respone.LoginResponseDto;
+import com.khaled.demo.model.dto.respone.UserInfoDto;
 import com.khaled.demo.model.dto.respone.UserResponseDto;
 import com.khaled.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -33,30 +34,22 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequest) {
 
-        // same the above
+
             LoginResponseDto response = userService.login(loginRequest);
             return ResponseEntity.ok(response);
     }
 
-
-
-    // Add endpoint for show the info for user {id} and put and delete
-    // it must be authorized
-
-    // Get User by ID
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> getUserById(
             @PathVariable Long id,
             Authentication authentication) {
 
-        UserResponseDto response = userService.getUserById(id, authentication.getName());
+        UserInfoDto response = userService.getUserById(id, authentication.getName());
         return ResponseEntity.ok(response);
     }
 
     // Update User
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UserDto request,
@@ -68,7 +61,6 @@ public class UserController {
 
     // Delete User
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<?> deleteUser(
             @PathVariable Long id,
             Authentication authentication) {
