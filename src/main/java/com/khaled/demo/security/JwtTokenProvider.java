@@ -1,9 +1,7 @@
 package com.khaled.demo.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.khaled.demo.exception.customExceptions.JwtAuthenticationException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -52,16 +50,16 @@ public class JwtTokenProvider {
     }
 
     // Validate the JWT token integrity and expiration
-    public boolean validateToken(String token) {
+    public void validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
-                    .parseClaimsJws(token); // throws if invalid or expired
-            return true;
+                    .parseClaimsJws(token);
+        } catch (ExpiredJwtException e) {
+            throw new JwtAuthenticationException("JWT token has expired");
         } catch (JwtException | IllegalArgumentException e) {
-            // Invalid JWT or expired token
-            return false;
+            throw new JwtAuthenticationException("Invalid JWT token");
         }
     }
 
