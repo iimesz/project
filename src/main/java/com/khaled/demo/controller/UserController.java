@@ -2,10 +2,12 @@ package com.khaled.demo.controller;
 
 import com.khaled.demo.model.dto.request.UserDto;
 import com.khaled.demo.model.dto.respone.UserInfoDto;
-import com.khaled.demo.model.dto.respone.UserResponseDto;
 import com.khaled.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,6 +27,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful");
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<UserInfoDto>> getAllUsers() {
+        List<UserInfoDto> users = (List<UserInfoDto>) userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(
             @PathVariable Long id,

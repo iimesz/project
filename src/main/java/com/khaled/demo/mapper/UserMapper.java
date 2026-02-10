@@ -2,7 +2,6 @@ package com.khaled.demo.mapper;
 
 import com.khaled.demo.model.dto.request.UserDto;
 import com.khaled.demo.model.dto.respone.UserInfoDto;
-import com.khaled.demo.model.dto.respone.UserResponseDto;
 import com.khaled.demo.model.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -20,7 +19,6 @@ public interface UserMapper {
     void updateUserFromDto(UserDto dto, @MappingTarget User user);
 
 
-    UserResponseDto toResponse(User user);
 
     @Mapping(source = "birthDate", target = "dateOfBirth")
     UserInfoDto toInfoDto(User user);
