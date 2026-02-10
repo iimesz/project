@@ -18,16 +18,13 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(
             @Valid @RequestBody LoginRequestDto request) {
-
         return ResponseEntity.ok(userService.login(request));
     }
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(
             @Valid @RequestBody RefreshTokenRequestDto request) {
-
-        return ResponseEntity.ok(
-                userService.refreshToken(request.getRefreshToken())
+        return ResponseEntity.ok(userService.refreshToken(request.getRefreshToken())
         );
     }
 }

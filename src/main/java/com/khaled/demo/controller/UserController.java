@@ -21,19 +21,15 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(
             @Valid @RequestBody UserDto request) {
-
-        UserResponseDto response = userService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        userService.register(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Registration successful");
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(
             @PathVariable Long id,
             Authentication authentication) {
-
-        UserInfoDto response =
-                userService.getUserById(id, authentication.getName());
-
+        UserInfoDto response = userService.getUserById(id, authentication.getName());
         return ResponseEntity.ok(response);
     }
 
@@ -42,18 +38,14 @@ public class UserController {
             @PathVariable Long id,
             @Valid @RequestBody UserDto request,
             Authentication authentication) {
-
-        UserResponseDto response =
-                userService.updateUser(id, request, authentication.getName());
-
-        return ResponseEntity.ok(response);
+        userService.updateUser(id, request, authentication.getName());
+        return ResponseEntity.ok("User updated successfully");
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(
             @PathVariable Long id,
             Authentication authentication) {
-
         userService.deleteUser(id, authentication.getName());
         return ResponseEntity.noContent().build();
     }

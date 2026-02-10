@@ -1,5 +1,4 @@
 package com.khaled.demo.security;
-
 import com.khaled.demo.model.entity.User;
 import com.khaled.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-                .authorities("ROLE_USER")
+                .authorities("ROLE_" + user.getRole().name())
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)

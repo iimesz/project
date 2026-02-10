@@ -1,6 +1,7 @@
 package com.khaled.demo.model.entity;
 
 import com.khaled.demo.model.entity.UserContact;
+import com.khaled.demo.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,6 +30,10 @@ public class User {
 
     @Column(nullable = false, length = 255)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @Column(name = "refresh_token")
     private String refreshToken;

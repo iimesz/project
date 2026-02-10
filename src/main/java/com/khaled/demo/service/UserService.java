@@ -10,14 +10,9 @@ import jakarta.validation.Valid;
 public interface UserService {
 
     UserResponseDto register(UserDto dto);
-
     LoginResponseDto login(LoginRequestDto loginRequest);
-
     UserInfoDto getUserById(Long id, String name);
-
     UserResponseDto updateUser(Long id, @Valid UserDto request, String name);
-
     void deleteUser(Long id, String name);
-
     LoginResponseDto refreshToken(String refreshToken);
 }
