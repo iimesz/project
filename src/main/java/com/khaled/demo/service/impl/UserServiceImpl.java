@@ -1,6 +1,7 @@
 package com.khaled.demo.service.impl;
 
 import com.khaled.demo.exception.customExceptions.DeleteUserException;
+import com.khaled.demo.exception.customExceptions.JwtAuthenticationException;
 import com.khaled.demo.exception.customExceptions.UpdateUserException;
 import com.khaled.demo.exception.customExceptions.UserNotFoundException;
 import com.khaled.demo.mapper.UserMapper;
@@ -129,5 +130,36 @@ public class UserServiceImpl implements UserService {
         }
 
         userRepository.delete(user);
+    }
+
+    @Override
+    public LoginResponseDto refreshToken(String refreshToken) {
+
+        jwtTokenProvider.validateToken(refreshToken);
+
+        String email = jwtTokenProvider.getEmailFromToken(refreshToken);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found")
+                );
+
+        if (!refreshToken.equals(user.getRefreshToken())) {
+            throw new JwtAuthenticationException("Invalid refresh token");
+        }
+
+        String newAccessToken = jwtTokenProvider.generateAccessToken(user.getEmail());
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
+
+        user.setRefreshToken(newRefreshToken);
+        userRepository.save(user);
+
+        return new LoginResponseDto(
+                newAccessToken,
+                newRefreshToken,
+                user.getEmail(),
+                user.getFirstName(),
+                user.getLastName()
+        );
     }
 }

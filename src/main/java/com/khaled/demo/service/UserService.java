@@ -18,4 +18,6 @@ public interface UserService {
     UserResponseDto updateUser(Long id, @Valid UserDto request, String name);
 
     void deleteUser(Long id, String name);
+
+    LoginResponseDto refreshToken(String refreshToken);
 }
