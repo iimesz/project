@@ -29,8 +29,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserDetailsService customUserDetailsService;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+        private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 
     @Bean
@@ -57,7 +56,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) // ✅ HERE
+                        .authenticationEntryPoint(jwtAuthenticationEntryPoint) 
                 )
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers(

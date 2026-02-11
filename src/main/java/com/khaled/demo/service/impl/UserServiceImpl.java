@@ -1,6 +1,5 @@
 package com.khaled.demo.service.impl;
 
-import com.khaled.demo.exception.customExceptions.DeleteUserException;
 import com.khaled.demo.exception.customExceptions.JwtAuthenticationException;
 import com.khaled.demo.exception.customExceptions.UpdateUserException;
 import com.khaled.demo.exception.customExceptions.UserNotFoundException;
@@ -70,28 +69,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoDto getUserById(Long id, String authenticatedEmail) {
+    public UserInfoDto getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
                         new UserNotFoundException("User not found with id: " + id)
                 );
-        if (!user.getEmail().equals(authenticatedEmail)) {
-            throw new UpdateUserException("Unauthorized: You can only access your own data");
-        }
         return userMapper.toInfoDto(user);
     }
 
 
 
     @Override
-    public UserInfoDto updateUser(Long id, UserDto dto, String authenticatedEmail) {
+    public void updateUser(Long id, UserDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
                         new UserNotFoundException("User not found with id: " + id)
                 );
-        if (!user.getEmail().equals(authenticatedEmail)) {
-            throw new UpdateUserException("Unauthorized: You can only modify your own data");
-        }
         if (dto.getEmail() != null && !dto.getEmail().trim().isEmpty()) {
             String normalizedEmail = dto.getEmail().trim().toLowerCase();
             if (!normalizedEmail.equals(user.getEmail()) && userRepository.existsByEmail(normalizedEmail)) {
@@ -104,19 +97,16 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
         User updatedUser = userRepository.save(user);
-        return userMapper.toInfoDto(updatedUser);
+        userMapper.toInfoDto(updatedUser);
     }
 
 
     @Override
-    public void deleteUser(Long id, String authenticatedEmail) {
+    public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() ->
                         new UserNotFoundException("User not found with id: " + id)
                 );
-        if (!user.getEmail().equals(authenticatedEmail)) {
-            throw new DeleteUserException("Unauthorized: You can only delete your own account");
-        }
         userRepository.delete(user);
     }
 

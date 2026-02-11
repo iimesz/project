@@ -1,54 +1,38 @@
 package com.khaled.demo.model.entity;
 
-import com.khaled.demo.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
+
 @Data
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "pets")
+public class Pet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(nullable = false)
+    private String name;
 
     @Column(name = "birth_date", nullable = false)
     private LocalDate birthDate;
 
-    @Column(nullable = false, length = 255)
-    private String password;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private String type;
 
-    @Column(name = "refresh_token")
-    private String refreshToken;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private UserContact userContact;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Pet> pets;
 
     @PrePersist
     void onCreate() {
