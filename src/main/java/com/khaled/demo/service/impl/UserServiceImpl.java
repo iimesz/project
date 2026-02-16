@@ -5,6 +5,7 @@ import com.khaled.demo.exception.customExceptions.UpdateUserException;
 import com.khaled.demo.exception.customExceptions.UserNotFoundException;
 import com.khaled.demo.mapper.UserMapper;
 import com.khaled.demo.model.dto.request.LoginRequestDto;
+import com.khaled.demo.model.dto.request.ResetPasswordRequest;
 import com.khaled.demo.model.dto.respone.LoginResponseDto;
 import com.khaled.demo.model.dto.request.UserDto;
 import com.khaled.demo.model.dto.respone.UserInfoDto;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -141,5 +143,25 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(userMapper::toInfoDto)
                 .toList();
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest request) {
+
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new UserNotFoundException("User not found")
+                );
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new UpdateUserException("Old password is incorrect");
+        }
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new UpdateUserException("New password and confirm password do not match");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 }
