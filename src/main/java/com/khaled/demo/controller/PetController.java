@@ -5,6 +5,8 @@ import com.khaled.demo.model.dto.respone.PetInfoDto;
 import com.khaled.demo.service.PetService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,6 +34,14 @@ public class PetController {
     @PreAuthorize("@userSecurity.isOwner(#userId, authentication) or hasRole('ADMIN')")
     public ResponseEntity<?> getPetsByUserId(@PathVariable Long userId) {
         List<PetInfoDto> pets = petService.getPetsByUserId(userId);
+        return ResponseEntity.ok(pets);
+    }
+    @GetMapping
+    @PreAuthorize("@userSecurity.isOwner(#userId, authentication) or hasRole('ADMIN')")
+    public ResponseEntity<Page<PetInfoDto>> getPetsByUserId(
+            @PathVariable Long userId,
+            Pageable pageable) {
+        Page<PetInfoDto> pets = petService.getPetsByUserId(userId, pageable);
         return ResponseEntity.ok(pets);
     }
 

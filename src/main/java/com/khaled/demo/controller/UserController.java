@@ -5,6 +5,9 @@ import com.khaled.demo.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,10 +29,11 @@ public class UserController {
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserInfoDto>> getAllUsers() {
-        List<UserInfoDto> users = (List<UserInfoDto>) userService.getAllUsers();
+    public ResponseEntity<Page<UserInfoDto>> getAllUsers(Pageable pageable) {
+        Page<UserInfoDto> users = userService.getAllUsers(pageable);
         return ResponseEntity.ok(users);
     }
+
     @GetMapping("/{id}")
     @PreAuthorize("@userSecurity.isOwner(#id, authentication) or hasRole('ADMIN')")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {

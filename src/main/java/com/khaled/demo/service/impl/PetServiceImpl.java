@@ -11,6 +11,8 @@ import com.khaled.demo.repository.UserRepository;
 import com.khaled.demo.service.PetService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,5 +64,11 @@ public class PetServiceImpl implements PetService {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new UserNotFoundException("Pet not found with id: " + petId));
         petRepository.delete(pet);
+    }
+
+    @Override
+    public Page<PetInfoDto> getPetsByUserId(Long userId, Pageable pageable) {
+        return petRepository.findByUserId(userId, pageable)
+                .map(petMapper::toInfoDto);
     }
 }
