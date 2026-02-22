@@ -82,7 +82,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public void updateUser(Long id, UserDto dto) {
         User user = userRepository.findById(id)
@@ -140,19 +139,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserInfoDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toInfoDto)
-                .toList();
-    }
-
-    @Override
     public void resetPassword(ResetPasswordRequest request) {
-
-
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UserNotFoundException("User not found")

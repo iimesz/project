@@ -32,12 +32,6 @@ public class PetController {
 
     @GetMapping
     @PreAuthorize("@userSecurity.isOwner(#userId, authentication) or hasRole('ADMIN')")
-    public ResponseEntity<?> getPetsByUserId(@PathVariable Long userId) {
-        List<PetInfoDto> pets = petService.getPetsByUserId(userId);
-        return ResponseEntity.ok(pets);
-    }
-    @GetMapping
-    @PreAuthorize("@userSecurity.isOwner(#userId, authentication) or hasRole('ADMIN')")
     public ResponseEntity<Page<PetInfoDto>> getPetsByUserId(
             @PathVariable Long userId,
             Pageable pageable) {
