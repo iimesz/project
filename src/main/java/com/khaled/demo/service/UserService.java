@@ -16,7 +16,6 @@ public interface UserService {
     void updateUser(Long id, UserDto request);
     void deleteUser(Long id);
     LoginResponseDto refreshToken(String refreshToken);
-	List<UserInfoDto> getAllUsers();
     void resetPassword(ResetPasswordRequest request);
     Page<UserInfoDto> getAllUsers(Pageable pageable);
 
