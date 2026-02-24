@@ -4,44 +4,29 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
-@Table(name = "event")
-public class Event {
+@Table(name = "event_participant")
+public class EventParticipant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = false)
-    private String city;
-
-    @Column(name = "pet_type", nullable = false)
-    private String petType;
-
-    @Column(name = "date_time", nullable = false)
-    private LocalDateTime dateTime;
-
-    @Column(nullable = false)
-    private String address;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @JoinColumn(name = "pet_id", nullable = false)
+    private Pet pet;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<EventParticipant> participants;
 
     @PrePersist
     void onCreate() {
